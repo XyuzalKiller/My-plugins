@@ -42,23 +42,25 @@ subprojects {
         buildUrl = "https://raw.githubusercontent.com/RazerTexz/My-plugins/builds/${project.name}.zip"
     }
 
-    tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileDebugKotlin") {
-        doLast {
-            destinationDirectory.get().asFile.walk().filter { it.extension == "class" }.forEach {
-                val reader = ClassReader(it.readBytes())
-                val writer = ClassWriter(reader, 0)
+    afterEvaluate {
+        tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileDebugKotlin") {
+            doLast {
+                destinationDirectory.get().asFile.walk().filter { it.extension == "class" }.forEach {
+                    val reader = ClassReader(it.readBytes())
+                    val writer = ClassWriter(reader, 0)
 
-                reader.accept(object : ClassVisitor(Opcodes.ASM9, writer) {
-                    override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor? {
-                        if (descriptor == "Lkotlin/Metadata;") {
-                            return null
+                    reader.accept(object : ClassVisitor(Opcodes.ASM9, writer) {
+                        override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor? {
+                            if (descriptor == "Lkotlin/Metadata;") {
+                                return null
+                            }
+
+                            return super.visitAnnotation(descriptor, visible)
                         }
+                    }, 0)
 
-                        return super.visitAnnotation(descriptor, visible)
-                    }
-                }, 0)
-
-                it.writeBytes(writer.toByteArray())
+                    it.writeBytes(writer.toByteArray())
+                }
             }
         }
     }
