@@ -8,7 +8,10 @@ import com.aliucord.api.PatcherAPI
 
 import de.robv.android.xposed.XC_MethodHook
 
-import com.discord.utilities.icon.IconUtils
+import com.discord.api.user.User
+import com.discord.api.guildmember.GuildMember
+import com.discord.api.guild.Guild
+import com.discord.api.role.GuildRole
 
 @AliucordPlugin(requiresRestart = false)
 class Main : Plugin() {
