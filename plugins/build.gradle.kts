@@ -28,6 +28,12 @@ subprojects {
             shaders = false
         }
 
+        packaging {
+            resources {
+                excludes += "META-INF/**"
+            }
+        }
+
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_21
