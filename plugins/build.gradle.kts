@@ -1,6 +1,8 @@
-import org.objectweb.asm.*
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.objectweb.asm.*
+
 import com.android.build.gradle.LibraryExtension
 import com.aliucord.gradle.AliucordExtension
 
@@ -43,7 +45,7 @@ subprojects {
     }
 
     afterEvaluate {
-        tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileDebugKotlin") {
+        tasks.named<KotlinCompile>("compileDebugKotlin") {
             doLast {
                 destinationDirectory.get().asFile.walk().filter { it.extension == "class" }.forEach {
                     val reader = ClassReader(it.readBytes())
@@ -51,11 +53,7 @@ subprojects {
 
                     reader.accept(object : ClassVisitor(Opcodes.ASM9, writer) {
                         override fun visitAnnotation(descriptor: String?, visible: Boolean): AnnotationVisitor? {
-                            if (descriptor == "Lkotlin/Metadata;") {
-                                return null
-                            }
-
-                            return super.visitAnnotation(descriptor, visible)
+                            return if (descriptor == "Lkotlin/Metadata;") null else super.visitAnnotation(descriptor, visible)
                         }
                     }, 0)
 
