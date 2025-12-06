@@ -71,6 +71,7 @@ subprojects {
 
                     it.writeBytes(writer.toByteArray())
                 }
+            }
         }
     }
 }
