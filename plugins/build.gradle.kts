@@ -24,14 +24,7 @@ subprojects {
         }
 
         buildFeatures {
-            buildConfig = true
             shaders = false
-        }
-
-        packaging {
-            resources {
-                excludes += "META-INF/**"
-            }
         }
 
         compileOptions {
