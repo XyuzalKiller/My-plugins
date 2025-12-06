@@ -4,10 +4,12 @@ import android.content.Context
 
 import com.aliucord.annotations.AliucordPlugin
 import com.aliucord.entities.Plugin
+import com.aliucord.api.PatcherAPI
 
-import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.facebook.imagepipeline.request.ImageRequest
-import com.discord.utilities.images.MGImages
+import com.discord.api.user.User
+import com.discord.api.guildmember.GuildMember
+import com.discord.api.guild.Guild
+import com.discord.api.role.GuildRole
 
 import de.robv.android.xposed.XC_MethodHook
 
@@ -18,19 +20,27 @@ class Main : Plugin() {
     }
 
     override fun start(ctx: Context) {
-        patcher.patch(MGImages::class.java, "getImageRequest", arrayOf(String::class.java, Int::class.java, Int::class.java, Boolean::class.java), object : XC_MethodHook() {
-            override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
-                val url = param.args[0] as String? ?: return
-                if (url.contains("/avatars/") && !settings.getBool("userAvatars", false)
-                    || url.contains("/banners/") && !settings.getBool("banners", false)
-                    || url.contains("/icons/") && !settings.getBool("serverIcons", false)
-                    || url.contains("/role-icons/") && !settings.getBool("roleIcons", false)
-                ) {
-                    (param.result as ImageRequestBuilder).b = ImageRequest.c.k
+        patcher.setNull(User::class.java, "a", "userAvatars")
+        patcher.setNull(User::class.java, "b", "userBanners")
+
+        patcher.setNull(GuildMember::class.java, "b", "userAvatars")
+        patcher.setNull(GuildMember::class.java, "c", "userBanners")
+
+        patcher.setNull(Guild::class.java, "q", "serverIcons")
+        patcher.setNull(Guild::class.java, "e", "serverBanners")
+
+        patcher.setNull(GuildRole::class.java, "d", "roleIcons")
+    }
+
+    override fun stop(ctx: Context) = patcher.unpatchAll()
+
+    private fun PatcherAPI.setNull(clazz: Class<*>, methodName: String, key: String) {
+        patch(clazz, methodName, emptyArray(), object : XC_MethodHook() {
+            override fun beforeHookedMethod(param: XC_MethodHook.MethodHookParam) {
+                if (!settings.getBool(key, false)) {
+                    param.result = null
                 }
             }
         })
     }
-
-    override fun stop(ctx: Context) = patcher.unpatchAll()
 }

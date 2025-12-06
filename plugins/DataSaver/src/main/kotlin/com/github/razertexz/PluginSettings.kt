@@ -15,15 +15,18 @@ internal class PluginSettings(private val settings: SettingsAPI) : SettingsPage(
         setActionBarTitle("Data Saver")
         setActionBarSubtitle("Only applies when using mobile data")
 
-        addCheckedSetting("User Avatars", null, "userAvatars", false)
-        addCheckedSetting("User and Server Banners", null, "banners", false)
-        addCheckedSetting("Server Icons", null, "serverIcons", false)
-        addCheckedSetting("Role Icons", null, "roleIcons", false)
+        addCheckedSetting("User Avatars", "userAvatars")
+        addCheckedSetting("User Banners", "userBanners")
+
+        addCheckedSetting("Server Icons", "serverIcons")
+        addCheckedSetting("Server Banners", "serverBanners")
+
+        addCheckedSetting("Role Icons", "roleIcons")
     }
 
-    private fun addCheckedSetting(hint: CharSequence, description: String?, key: String, defValue: Boolean) {
-        addView(Utils.createCheckedSetting(getContext()!!, CheckedSetting.ViewType.SWITCH, hint, description).apply {
-            isChecked = settings.getBool(key, defValue)
+    private fun addCheckedSetting(hint: CharSequence, key: String) {
+        addView(Utils.createCheckedSetting(getContext()!!, CheckedSetting.ViewType.SWITCH, hint, null).apply {
+            isChecked = settings.getBool(key, false)
             setOnCheckedListener { settings.setBool(key, it) }
         })
     }
