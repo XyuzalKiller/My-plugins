@@ -11,7 +11,7 @@ subprojects {
     configure<KotlinAndroidExtension> {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
-            freeCompilerArgs.addAll("-Xno-param-assertions", "-Xno-call-assertions", "-Xno-receiver-assertions")
+            freeCompilerArgs.addAll("-Xno-param-assertions", "-Xno-call-assertions", "-Xno-receiver-assertions", "-Xno-source-debug-extension")
         }
     }
 
