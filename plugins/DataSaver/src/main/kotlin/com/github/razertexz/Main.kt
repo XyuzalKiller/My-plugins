@@ -6,12 +6,9 @@ import com.aliucord.annotations.AliucordPlugin
 import com.aliucord.entities.Plugin
 import com.aliucord.api.PatcherAPI
 
-import com.discord.api.user.User
-import com.discord.api.guildmember.GuildMember
-import com.discord.api.guild.Guild
-import com.discord.api.role.GuildRole
-
 import de.robv.android.xposed.XC_MethodHook
+
+import com.discord.utilities.icon.IconUtils
 
 @AliucordPlugin(requiresRestart = false)
 class Main : Plugin() {
@@ -21,18 +18,15 @@ class Main : Plugin() {
 
     override fun start(ctx: Context) {
         patcher.setNull(User::class.java, "a", "userAvatars")
-        patcher.setNull(User::class.java, "b", "userBanners")
-
         patcher.setNull(GuildMember::class.java, "b", "userAvatars")
+
+        patcher.setNull(User::class.java, "b", "userBanners")
         patcher.setNull(GuildMember::class.java, "c", "userBanners")
 
         patcher.setNull(Guild::class.java, "q", "serverIcons")
         patcher.setNull(Guild::class.java, "e", "serverBanners")
-
         patcher.setNull(GuildRole::class.java, "d", "roleIcons")
     }
-
-    override fun stop(ctx: Context) = patcher.unpatchAll()
 
     private fun PatcherAPI.setNull(clazz: Class<*>, methodName: String, key: String) {
         patch(clazz, methodName, emptyArray(), object : XC_MethodHook() {
@@ -43,4 +37,6 @@ class Main : Plugin() {
             }
         })
     }
+
+    override fun stop(ctx: Context) = patcher.unpatchAll()
 }
