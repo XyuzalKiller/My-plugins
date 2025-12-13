@@ -1,5 +1,5 @@
 package com.github.razertexz;
-/*
+
 import com.discord.utilities.textprocessing.DiscordParser;
 import com.discord.utilities.textprocessing.Rules;
 import com.discord.simpleast.core.parser.Parser;
@@ -10,9 +10,9 @@ import b.a.t.b.b.e;
 
 import java.util.ArrayList;
 import java.util.List;
-*/
+
 public final class SimpleASTAPI {
-/*    private static final List<Rule<?, ?, ?>> globalRules = new ArrayList<>();
+    private static final List<Rule<?, ?, ?>> globalRules = new ArrayList<>();
     private final List<Rule<?, ?, ?>> registeredRules = new ArrayList<>();
 
     static {
@@ -70,5 +70,5 @@ public final class SimpleASTAPI {
     public final void unregisterAll() {
         globalRules.removeAll(registeredRules);
         registeredRules.clear();
-    }*/
+    }
 }
